@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt 
+import numpy as np
 
 
 def data_load() -> pd.DataFrame:
@@ -17,7 +18,7 @@ def preprocess(customer: pd.DataFrame)-> tuple:
 def find_optimal_k() -> int:
     return 5  # determined from elbow chart analysis
 
-def fit_kmeans(customer:pd.DataFrame, X_scaled):
+def fit_kmeans(customer:pd.DataFrame, X_scaled: np.ndarray) -> pd.DataFrame:
     km = KMeans(n_clusters=5, random_state=42, n_init=10)
     customer['Cluster'] = km.fit_predict(X_scaled)
     
@@ -38,4 +39,5 @@ def fit_kmeans(customer:pd.DataFrame, X_scaled):
     plt.show()
     return customer
         
+    
     
