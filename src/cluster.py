@@ -10,7 +10,7 @@ def data_load() -> pd.DataFrame:
     return customer
 
 def preprocess(customer: pd.DataFrame)-> tuple:
-    X = customer[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']]
+    X = customer[[ 'Annual Income (k$)', 'Spending Score (1-100)']]
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     return X_scaled, scaler
@@ -21,17 +21,18 @@ def find_optimal_k() -> int:
 def fit_kmeans(customer:pd.DataFrame, X_scaled: np.ndarray) -> pd.DataFrame:
     km = KMeans(n_clusters=5, random_state=42, n_init=10)
     customer['Cluster'] = km.fit_predict(X_scaled)
-    
-    plt.figure(figsize=(10,6))
+
+    plt.figure(figsize=(10, 8))
     colors = ['red', 'blue', 'green', 'orange', 'purple']
     for i in range(5):
-        cluster_data = customer[customer["Cluster"] == i ]
-        plt.scatter(cluster_data["Annual Income (k$)"], 
-                    cluster_data["Spending Score (1-100)"],
-                    c=colors[i], label=f"cluster{i}" , s=80)
-    plt.xlabel("Annual Income (k$)")
-    plt.ylabel("Spending Score (1-100)")
-    plt.title("Customer Segments — K-Means (k=5)")
+        cluster_data = customer[customer['Cluster'] == i]
+        plt.scatter(cluster_data['Annual Income (k$)'],
+                    cluster_data['Spending Score (1-100)'],
+                    c=colors[i], label=f'Cluster {i}', s=80)
+
+    plt.xlabel('Annual Income (k$)')
+    plt.ylabel('Spending Score (1-100)')
+    plt.title('Customer Segments — K-Means (k=5)')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
@@ -39,5 +40,8 @@ def fit_kmeans(customer:pd.DataFrame, X_scaled: np.ndarray) -> pd.DataFrame:
     plt.show()
     return customer
         
-    
+
+def profile_cluster(customer: pd.DataFrame) -> np.ndarray:
+    profile = customer.groupby(["Cluster"])[['Annual Income (k$)','Spending Score (1-100)']].mean().round(1)
+    return profile
     
